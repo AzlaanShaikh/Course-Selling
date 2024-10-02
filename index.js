@@ -1,42 +1,27 @@
 const express =require("express")
-const jwt=require("jsonwebtoken")
-const mongoose =require("mogoose")
+
+const { userRouter } = require("./routes/user.js");
+
+const {courseRouter} =require("./routes/course.js")
+const {adminRouter} =require("./routes/admin.js")
+const mongoose=require("mongoose")
 
 const app=express();
+app.use(express.json());
+console.log("Hello from index.js");
 
-app.get("/user/signup",function (req,res){
-    res.json({
-        message:"signup endpoint"
-    })
-} )
+app.use("/api/v1/user",userRouter);
 
-app.post("/user/signin",function (req,res){
-    res.json({
-        message:"signin endpoint"
-    })
+app.use("/api/v1/admin",adminRouter);
+
+app.use("/api/v1/course",courseRouter);
+
+const main=async()=>{
+    await mongoose.connect("mongodb+srv://azlaan472:azlaan472@cluster0.0fbm8.mongodb.net/coursera-app?retryWrites=true&w=majority&appName=Cluster0");
+    app.listen(3000);
+    console.log("Listtening on port 3000");
+    
 }
-)
-
-app.get("/user/purchase",(req,res)=>{
-    res.json({
-        message:"purchase endpoint"
-    })
-})
-
-app.get("/course/purchases",(req,res)=>{
-    res.json({
-        message:"purchases endpoint"
-    })
-})
-
-app.get("/courses",(req,res)=>{
-    res.json({
-        message:"courses endpoint"
-    })
-})
 
 
-
-
-
-app.listen(3000)
+main()
